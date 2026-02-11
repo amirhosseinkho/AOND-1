@@ -1,0 +1,2 @@
+stride,node_count,estimated_bytes,min_ns,max_ns,avg_ns,std_ns
+2,37393,2393152,300,7000,1484.76,995.28
