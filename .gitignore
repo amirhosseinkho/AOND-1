@@ -1,0 +1,7 @@
+# Build outputs
+*.exe
+*.o
+trie_lookup
+
+# Python
+__pycache__/

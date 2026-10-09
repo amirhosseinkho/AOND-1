@@ -1,5 +1,17 @@
 # Multibit Trie IP Lookup Project
 
+**English summary.** A C++17 implementation of a multibit trie for longest-prefix-match (LPM) IP address lookup. The trie is built from a 20,000-prefix routing table with strides of 1, 2, 4, or 8 bits, and an interactive CLI supports inserting prefixes, single and batch lookups, correctness checks against a reference linear-search implementation, and benchmarks over 100,000 addresses. Python scripts (`analyze.py`) plot lookup time, node count, and memory use against stride.
+
+```bash
+g++ -std=c++17 -O2 -o trie_lookup main.cpp trie.cpp
+./trie_lookup
+```
+
+The detailed documentation below is in Persian.
+
+---
+
+
 پیاده‌سازی درخت جستجوی چند بیتی (Multibit Trie) برای جستجوی Longest Prefix Match در آدرس‌های IP.
 
 ## پیش‌نیازها
