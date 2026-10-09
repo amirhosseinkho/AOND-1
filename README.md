@@ -1,34 +1,24 @@
-# Multibit Trie IP Lookup Project
+> Persian version: [README.fa.md](README.fa.md)
 
-**English summary.** A C++17 implementation of a multibit trie for longest-prefix-match (LPM) IP address lookup. The trie is built from a 20,000-prefix routing table with strides of 1, 2, 4, or 8 bits, and an interactive CLI supports inserting prefixes, single and batch lookups, correctness checks against a reference linear-search implementation, and benchmarks over 100,000 addresses. Python scripts (`analyze.py`) plot lookup time, node count, and memory use against stride.
+# Multibit Trie IP Lookup
 
-```bash
-g++ -std=c++17 -O2 -o trie_lookup main.cpp trie.cpp
-./trie_lookup
-```
+A C++17 implementation of a multibit trie for longest-prefix-match (LPM) lookup of IP addresses, with a benchmark of strides 1, 2, 4 and 8.
 
-The detailed documentation below is in Persian.
+## Prerequisites
 
----
-
-
-پیاده‌سازی درخت جستجوی چند بیتی (Multibit Trie) برای جستجوی Longest Prefix Match در آدرس‌های IP.
-
-## پیش‌نیازها
-
-- **C++17 compiler** (g++, clang++, یا MSVC)
-- **Python 3** با کتابخانه‌های:
+- **C++17 compiler** (g++, clang++ or MSVC)
+- **Python 3** with:
   - `pandas`
   - `matplotlib`
   - `numpy`
 
-### نصب کتابخانه‌های Python
+### Installing the Python libraries
 
 ```bash
 pip install pandas matplotlib numpy
 ```
 
-## ساخت پروژه
+## Building
 
 ### Linux/macOS
 
@@ -48,37 +38,39 @@ cl /EHsc /std:c++17 /O2 main.cpp trie.cpp /Fe:trie_lookup.exe
 g++ -std=c++17 -O2 -o trie_lookup.exe main.cpp trie.cpp
 ```
 
-## استفاده
+## Usage
 
-### حالت تعاملی (Interactive Mode)
+### Interactive mode
 
-اجرای برنامه و استفاده از دستورات CLI:
+Run the program and use the CLI commands:
 
 ```bash
 ./trie_lookup
-# یا در Windows:
+# or on Windows:
 trie_lookup.exe
 ```
 
-### دستورات موجود
+### Commands
 
 ```
-build <stride>                    - ساخت trie از prefix-list.txt (stride: 1, 2, 4, 8)
-insert <prefix_hex> <length> <next_hop> - درج یک prefix دستی
-lookup <address>                   - جستجوی یک آدرس (hex یا decimal)
-lookup-file <filename>            - جستجوی آدرس‌ها از فایل
-tprint                             - چاپ ساختار درخت
-stats                              - نمایش آمار زمان‌های lookup
-memory                             - نمایش آمار حافظه
-save-stats <filename>              - ذخیره آمار در CSV
-test-correctness <filename>        - تست صحت با روش مرجع (20 آدرس)
-benchmark <filename>               - اجرای benchmark برای تمام strideها (100000 آدرس)
-quit / exit                        - خروج
+build <stride>                          - build the trie from prefix-list.txt (stride: 1, 2, 4, 8)
+insert <prefix_hex> <length> <next_hop> - insert a prefix manually
+lookup <address>                        - look up one address (hex or decimal)
+lookup-file <filename>                  - look up the addresses in a file
+tprint                                  - print the trie structure
+stats                                   - show lookup-time statistics
+memory                                  - show memory statistics
+save-stats <filename>                   - save the statistics to CSV
+test-correctness <filename>             - check results against the reference method (20 addresses)
+benchmark <filename>                    - run the benchmark for all strides (100,000 addresses)
+quit / exit                             - quit
 ```
 
-### مثال‌های استفاده
+### Usage examples
 
-#### 1. ساخت trie از فایل prefix-list.txt
+The outputs below illustrate the format of each command; the measured results are in the [results summary](#results-summary).
+
+#### 1. Build the trie from prefix-list.txt
 
 ```
 > build 4
@@ -87,21 +79,21 @@ Node count: 15234
 Estimated memory: 2437440 bytes
 ```
 
-#### 2. درج دستی یک prefix
+#### 2. Insert a prefix manually
 
 ```
 > insert 40 13 1262
 Inserted prefix: 40/13 -> next_hop=1262
 ```
 
-#### 3. جستجوی یک آدرس
+#### 3. Look up one address
 
 ```
 > lookup 0x40800000
 Address: 0x40800000 -> next_hop=4513 (time: 45 ns)
 ```
 
-#### 4. جستجوی از فایل
+#### 4. Look up addresses from a file
 
 ```
 > lookup-file addresses.txt
@@ -111,7 +103,7 @@ Address: 0x40800000 -> next_hop=4513 (time: 45 ns)
 Processed 100 addresses
 ```
 
-#### 5. چاپ ساختار درخت
+#### 5. Print the trie structure
 
 ```
 > tprint
@@ -125,7 +117,7 @@ root
 ...
 ```
 
-#### 6. نمایش آمار
+#### 6. Show statistics
 
 ```
 > stats
@@ -137,15 +129,15 @@ Lookup Statistics:
   Std Dev: 12.45 ns
 ```
 
-#### 7. تست صحت
+#### 7. Correctness test
 
-ابتدا 20 آدرس تست تولید کنید:
+First generate 20 test addresses:
 
 ```bash
 python generate_test_addresses.py 20 correctness_test.txt
 ```
 
-سپس trie را بسازید و تست کنید:
+Then build the trie and run the test:
 
 ```
 > build 4
@@ -157,15 +149,15 @@ Correct: 20/20 (100.00%)
 ✓ All tests passed!
 ```
 
-#### 8. اجرای Benchmark
+#### 8. Run the benchmark
 
-ابتدا 100000 آدرس تست تولید کنید:
+First generate 100,000 test addresses:
 
 ```bash
 python generate_test_addresses.py 100000 addresses.txt
 ```
 
-سپس benchmark را اجرا کنید:
+Then run the benchmark:
 
 ```
 > benchmark addresses.txt
@@ -187,115 +179,119 @@ Statistics saved to results_stride_1.csv
 Results saved to results_stride_*.csv files
 ```
 
-## گزارش و نتایج
+## Report and results
 
-### گزارش کامل پروژه
+### Full project report
 
-گزارش کامل پروژه در فایل **`report.md`** موجود است که شامل:
+The full report is in **`report.md`** (in Persian). It covers:
 
-- مقدمه و تئوری Multibit Trie
-- طراحی و پیاده‌سازی
-- الگوریتم‌های اصلی (Insert, Lookup, Tprint)
-- محاسبه حافظه
-- بررسی صحت عملکرد (100% موفق)
-- نتایج کارایی برای strideهای 1، 2، 4، 8
-- پاسخ تفصیلی به سوالات الف، ب، ج
-- تحلیل پیچیدگی زمانی و فضایی
-- نتیجه‌گیری و توصیه‌ها
+- an introduction to multibit tries
+- design and implementation
+- the main algorithms (insert, lookup, tprint)
+- memory calculation
+- correctness check (100% passed)
+- performance results for strides 1, 2, 4 and 8
+- detailed answers to questions A, B and C
+- time and space complexity analysis
+- conclusions and recommendations
 
-### فایل‌های نتایج
+### Result files
 
-پس از اجرای benchmark، فایل‌های زیر تولید می‌شوند:
+The benchmark writes the following files.
 
-#### فایل‌های CSV خلاصه:
-- `results_stride_1.csv` - نتایج stride=1
-- `results_stride_2.csv` - نتایج stride=2
-- `results_stride_4.csv` - نتایج stride=4
-- `results_stride_8.csv` - نتایج stride=8
+#### Summary CSV files
 
-هر فایل شامل: stride, node_count, estimated_bytes, min_ns, max_ns, avg_ns, std_ns
+- `results_stride_1.csv`: results for stride 1
+- `results_stride_2.csv`: results for stride 2
+- `results_stride_4.csv`: results for stride 4
+- `results_stride_8.csv`: results for stride 8
 
-#### فایل‌های CSV تفصیلی:
-- `lookup_times_stride_1.csv` - زمان‌های lookup برای هر آدرس (100,000 آدرس)
-- `lookup_times_stride_2.csv` - زمان‌های lookup برای هر آدرس
-- `lookup_times_stride_4.csv` - زمان‌های lookup برای هر آدرس
-- `lookup_times_stride_8.csv` - زمان‌های lookup برای هر آدرس
+Each file contains: `stride, node_count, estimated_bytes, min_ns, max_ns, avg_ns, std_ns`.
 
-**نکته**: نتایج پس از حذف outlierها (0.13-0.23% از داده‌ها) محاسبه شده‌اند.
+#### Detailed CSV files
 
-### نمودارها
+- `lookup_times_stride_1.csv`: lookup time of every address (100,000 addresses)
+- `lookup_times_stride_2.csv`: lookup time of every address
+- `lookup_times_stride_4.csv`: lookup time of every address
+- `lookup_times_stride_8.csv`: lookup time of every address
 
-برای تولید نمودارها:
+**Note:** results are computed after removing outliers (0.13–0.23% of the data).
+
+### Plots
+
+To generate the plots:
 
 ```bash
 python analyze.py
 ```
 
-این دستور نمودارهای زیر را تولید می‌کند:
+This produces:
 
-- **`memory_vs_stride.png`** - نمودار مصرف حافظه برحسب stride
-- **`avg_lookup_time_vs_stride.png`** - نمودار زمان متوسط lookup
-- **`lookup_time_stats.png`** - نمودار آمار کامل (min/max/avg ± std dev)
-- **`node_count_vs_stride.png`** - نمودار تعداد گره‌ها برحسب stride
+- **`memory_vs_stride.png`**: memory use by stride
+- **`avg_lookup_time_vs_stride.png`**: average lookup time
+- **`lookup_time_stats.png`**: full statistics (min/max/avg ± standard deviation)
+- **`node_count_vs_stride.png`**: number of nodes by stride
 
-### نتایج خلاصه
+### Results summary
 
-| Stride | حافظه (MB) | زمان متوسط (ns) | تعداد گره | Throughput (M pps) |
-|--------|------------|----------------|-----------|-------------------|
-| 1      | 2.25       | 2,584.42      | 49,159    | 0.39               |
-| 2      | 2.28       | 1,484.76      | 37,393 ⭐ | 0.67               |
-| 4      | 8.90       | 1,128.72      | 58,319    | 0.89               |
-| 8      | 841.79     | 947.81        | 424,364   | 1.06               |
+| Stride | Memory (MB) | Average time (ns) | Nodes | Throughput (M pps) |
+|--------|-------------|-------------------|-----------|-------------------|
+| 1      | 2.25        | 2,584.42          | 49,159    | 0.39              |
+| 2      | 2.28        | 1,484.76          | 37,393    | 0.67              |
+| 4      | 8.90        | 1,128.72          | 58,319    | 0.89              |
+| 8      | 841.79      | 947.81            | 424,364   | 1.06              |
 
-**یافته‌های کلیدی:**
-- Stride=2: کمترین تعداد گره (37,393) و بهترین انتخاب برای حافظه محدود
-- Stride=4: بهترین تعادل کلی بین حافظه و سرعت
-- Stride=8: بهترین عملکرد اما مصرف حافظه بسیار زیاد (841.79 MB)
+**Key findings:**
 
-برای جزئیات بیشتر، به فایل **`report.md`** مراجعه کنید.
+- Stride 2: the fewest nodes (37,393); the best choice when memory is limited
+- Stride 4: the best overall balance between memory and speed
+- Stride 8: the fastest, but with very high memory use (841.79 MB)
 
-## ساختار فایل‌ها
+See **`report.md`** for details.
+
+## File structure
 
 ```
 .
-├── main.cpp                    # برنامه اصلی و CLI
-├── trie.h                      # هدر کلاس MultibitTrie
-├── trie.cpp                    # پیاده‌سازی MultibitTrie
-├── reference.cpp               # پیاده‌سازی مرجع برای تست صحت
-├── prefix-list.txt             # فایل prefixها (ورودی - 20000+ prefix)
-├── addresses.txt               # آدرس‌های تست (100,000 آدرس)
-├── correctness_test.txt         # آدرس‌های تست صحت (20 آدرس)
-├── generate_test_addresses.py  # تولید آدرس‌های تست
-├── analyze.py                  # اسکریپت تحلیل و تولید نمودارها
-├── test_trie_simulation.py     # شبیه‌سازی Python برای تست
-├── report.md                    # گزارش کامل پروژه ⭐
-├── README.md                   # این فایل
+├── main.cpp                      # main program and CLI
+├── trie.h                        # MultibitTrie class header
+├── trie.cpp                      # MultibitTrie implementation
+├── reference.cpp                 # reference implementation for correctness checks
+├── prefix-list.txt               # prefix input file (20,000 prefixes)
+├── addresses.txt                 # test addresses (100,000)
+├── correctness_test.txt          # correctness-test addresses (20)
+├── generate_test_addresses.py    # generates test addresses
+├── analyze.py                    # analysis and plotting script
+├── test_trie_simulation.py       # Python simulation for testing
+├── report.md                     # full project report (Persian)
+├── README.md                     # this file
+├── README.fa.md                  # Persian version of this file
 │
-├── results_stride_1.csv         # نتایج خلاصه stride=1
-├── results_stride_2.csv         # نتایج خلاصه stride=2
-├── results_stride_4.csv         # نتایج خلاصه stride=4
-├── results_stride_8.csv         # نتایج خلاصه stride=8
+├── results_stride_1.csv          # summary results, stride 1
+├── results_stride_2.csv          # summary results, stride 2
+├── results_stride_4.csv          # summary results, stride 4
+├── results_stride_8.csv          # summary results, stride 8
 │
-├── lookup_times_stride_1.csv    # زمان‌های تفصیلی stride=1
-├── lookup_times_stride_2.csv    # زمان‌های تفصیلی stride=2
-├── lookup_times_stride_4.csv    # زمان‌های تفصیلی stride=4
-├── lookup_times_stride_8.csv    # زمان‌های تفصیلی stride=8
+├── lookup_times_stride_1.csv     # detailed times, stride 1
+├── lookup_times_stride_2.csv     # detailed times, stride 2
+├── lookup_times_stride_4.csv     # detailed times, stride 4
+├── lookup_times_stride_8.csv     # detailed times, stride 8
 │
-├── memory_vs_stride.png          # نمودار مصرف حافظه
-├── avg_lookup_time_vs_stride.png # نمودار زمان متوسط
-├── lookup_time_stats.png         # نمودار آمار کامل زمان
-└── node_count_vs_stride.png     # نمودار تعداد گره‌ها
+├── memory_vs_stride.png          # memory plot
+├── avg_lookup_time_vs_stride.png # average time plot
+├── lookup_time_stats.png         # full time statistics plot
+└── node_count_vs_stride.png      # node count plot
 ```
 
-## فرمت فایل prefix-list.txt
+## `prefix-list.txt` format
 
-هر خط شامل 3 عدد است:
+Each line has 3 numbers:
 
 ```
 prefix_hex length next_hop
 ```
 
-مثال:
+Example:
 
 ```
 40 13 1262
@@ -303,13 +299,13 @@ prefix_hex length next_hop
 2044 20 2964
 ```
 
-- `prefix_hex`: prefix در مبنای 16 (hex)
-- `length`: تعداد بیت‌های معتبر (0-32)
-- `next_hop`: گام بعدی (next hop)
+- `prefix_hex`: the prefix in hexadecimal
+- `length`: number of significant bits (0–32)
+- `next_hop`: the next hop
 
-## فرمت فایل addresses.txt
+## `addresses.txt` format
 
-هر خط یک آدرس است (hex یا decimal):
+One address per line (hex or decimal):
 
 ```
 0x40800000
@@ -317,62 +313,61 @@ prefix_hex length next_hop
 1073741824
 ```
 
-یا بدون پیشوند 0x:
+or without the `0x` prefix:
 
 ```
 40800000
 20440000
 ```
 
-## نکات مهم
+## Notes
 
-1. **فایل prefix-list.txt باید در همان دایرکتوری اجرای برنامه باشد**
-2. **برای تست صحت، ابتدا trie را با `build` بسازید**
-3. **برای benchmark، از 100000 آدرس استفاده کنید تا نتایج قابل اعتماد باشند**
-4. **زمان‌ها در نانوثانیه (nanoseconds) گزارش می‌شوند**
-5. **نتایج پس از حذف outlierها محاسبه شده‌اند (0.13-0.23% از داده‌ها)**
+1. **`prefix-list.txt` must be in the directory the program runs from.**
+2. **For the correctness test, build the trie with `build` first.**
+3. **Use 100,000 addresses for the benchmark so the results are reliable.**
+4. **Times are reported in nanoseconds.**
+5. **Results are computed after removing outliers (0.13–0.23% of the data).**
 
-## عیب‌یابی
+## Troubleshooting
 
-### خطا: "Cannot open file prefix-list.txt"
+### Error: "Cannot open file prefix-list.txt"
 
-- مطمئن شوید فایل `prefix-list.txt` در همان دایرکتوری اجرای برنامه است
+- Make sure `prefix-list.txt` is in the directory the program runs from.
 
-### خطا: "Stride must be 1, 2, 4, or 8"
+### Error: "Stride must be 1, 2, 4, or 8"
 
-- فقط strideهای 1، 2، 4، و 8 پشتیبانی می‌شوند
+- Only strides 1, 2, 4 and 8 are supported.
 
-### خطا در Python: "No module named 'pandas'"
+### Python error: "No module named 'pandas'"
 
-- کتابخانه‌های Python را نصب کنید: `pip install pandas matplotlib numpy`
+- Install the Python libraries: `pip install pandas matplotlib numpy`
 
-## مثال کامل اجرا
+## Complete example
 
 ```bash
-# 1. ساخت پروژه
+# 1. Build the project
 g++ -std=c++17 -O2 -o trie_lookup main.cpp trie.cpp
 
-# 2. تولید آدرس‌های تست
+# 2. Generate test addresses
 python generate_test_addresses.py 20 correctness_test.txt
 python generate_test_addresses.py 100000 addresses.txt
 
-# 3. اجرای برنامه
+# 3. Run the program
 ./trie_lookup
 
-# در CLI:
+# In the CLI:
 > build 4
 > test-correctness correctness_test.txt
 > benchmark addresses.txt
 > quit
 
-# 4. تحلیل نتایج و تولید نمودارها
+# 4. Analyze the results and generate the plots
 python analyze.py
 
-# 5. مشاهده گزارش کامل
-# فایل report.md را باز کنید
+# 5. Read the full report
+# open report.md
 ```
 
-## نویسنده
+## Author
 
-امیرحسین خوشبخت
-بهمن 1404
+Amirhossein Khoshbakht, February 2026
